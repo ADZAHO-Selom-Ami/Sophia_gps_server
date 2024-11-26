@@ -32,13 +32,11 @@ namespace Proxy
         string DecideItinerary(Position origin, Position destination);
 
         [OperationContract]
-        string GetIninerary(Position origin, Position destination);
+        string GetItinerary(Position origin, Position destination);
 
         [OperationContract]
         string GetInineraryForBike(Position origin, Position destination);
 
-
-        //Méthode pour la somme des itinéraires et les envoyer dans une queue
     }
 
 }

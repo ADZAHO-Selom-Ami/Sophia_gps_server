@@ -3,29 +3,88 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 using System.Text;
+using System.Threading.Tasks;
+using Apache.NMS;
+using Apache.NMS.ActiveMQ;
+using ISession = Apache.NMS.ISession;
 
 namespace RoutingServer
 {
-    // REMARQUE : vous pouvez utiliser la commande Renommer du menu Refactoriser pour changer le nom de classe "Service1" à la fois dans le code et le fichier de configuration.
     public class Server : IServer
     {
-        public string GetData(int value)
+        private readonly Proxy _proxy;
+
+        public Server()
         {
-            return string.Format("You entered: {0}", value);
+            _proxy = new Proxy();
         }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        public async Task<string> GetItinerary(string origin, string destination)
         {
-            if (composite == null)
-            {
-                throw new ArgumentNullException("composite");
-            }
-            if (composite.BoolValue)
-            {
-                composite.StringValue += "Suffix";
-            }
-            return composite;
+            // Appeler le serveur SOAP proxy pour obtenir l'itinéraire
+            var itinerary = await _proxy.GetInineraryForBikeAsync(origin, destination);
+
+            // Envoyer l'itinéraire dans une queue (par exemple, ActiveMQ)
+            await SendToQueue(itinerary);
+
+            return itinerary;
         }
+
+        private async Task SendToQueue(string message)
+        {
+            Uri connecturi = new Uri("activemq:tcp://localhost:61616");
+            IConnectionFactory factory = new ConnectionFactory(connecturi);
+            using (IConnection connection = factory.CreateConnection())
+            {
+                connection.Start();
+                using (ISession session = connection.CreateSession())
+                {
+                    IDestination destination = session.GetQueue("itineraryQueue");
+                    using (IMessageProducer producer = session.CreateProducer(destination))
+                    {
+                        producer.DeliveryMode = MsgDeliveryMode.NonPersistent;
+                        ITextMessage textMessage = producer.CreateTextMessage(message);
+                        await Task.Run(() => producer.Send(textMessage));
+                    }
+
+                    session.Close();
+                }
+                connection.Close();
+            }
+        }
+
+        public string ReceiveFromQueue()
+        {
+            Uri connecturi = new Uri("activemq:tcp://localhost:61616");
+            IConnectionFactory factory = new ConnectionFactory(connecturi);
+            using (IConnection connection = factory.CreateConnection())
+            {
+                connection.Start();
+                using (ISession session = connection.CreateSession())
+                {
+                    IDestination destination = session.GetQueue("itineraryQueue");
+                    using (IMessageConsumer consumer = session.CreateConsumer(destination))
+                    {
+                        ITextMessage message = consumer.Receive() as ITextMessage;
+                        if (message != null)
+                        {
+                            return message.Text;
+                        }
+                    }
+
+                    session.Close();
+                }
+                connection.Close();
+            }
+            return null;
+        }
+    }
+
+    public class Position
+    {
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 }

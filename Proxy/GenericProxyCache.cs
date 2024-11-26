@@ -1,12 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Caching;
 
-namespace Proxy
+public class GenericProxyCache<T> where T : new()
 {
-    internal class GenericProxyCache
+    private MemoryCache _cache;
+    public DateTimeOffset dt_default { get; set; }
+
+    public GenericProxyCache()
     {
+        _cache = new MemoryCache("GenericProxyCache");
+        dt_default = ObjectCache.InfiniteAbsoluteExpiration;
+    }
+
+    public T Get(string CacheItemName)
+    {
+        return Get(CacheItemName, dt_default);
+    }
+
+    public T Get(string CacheItemName, double dt_seconds)
+    {
+        return Get(CacheItemName, DateTimeOffset.Now.AddSeconds(dt_seconds));
+    }
+
+    public T Get(string CacheItemName, DateTimeOffset dt)
+    {
+        if (_cache.Contains(CacheItemName))
+        {
+            return (T)_cache.Get(CacheItemName);
+        }
+        else
+        {
+            T newItem = new T();
+            _cache.Set(CacheItemName, newItem, new CacheItemPolicy { AbsoluteExpiration = dt });
+            return newItem;
+        }
     }
 }
