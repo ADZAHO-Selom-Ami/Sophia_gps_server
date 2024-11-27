@@ -3,11 +3,11 @@
   "WorkspaceRootPath": "C:\\Users\\Sara\\source\\repos\\Sophia_gps_server\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|c:\\users\\sara\\source\\repos\\sophia_gps_server\\proxy\\proxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|C:\\Users\\Sara\\source\\repos\\Sophia_gps_server\\proxy\\proxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|solutionrelative:proxy\\proxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|C:\\Users\\Sara\\source\\repos\\Sophia_gps_server\\proxy\\iproxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|c:\\users\\sara\\source\\repos\\sophia_gps_server\\proxy\\iproxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|solutionrelative:proxy\\iproxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -26,9 +26,9 @@
               "Title": "Proxy.cs",
               "DocumentMoniker": "C:\\Users\\Sara\\source\\repos\\Sophia_gps_server\\Proxy\\Proxy.cs",
               "RelativeDocumentMoniker": "Proxy\\Proxy.cs",
-              "ToolTip": "C:\\Users\\Sara\\source\\repos\\Sophia_gps_server\\Proxy\\Proxy.cs",
-              "RelativeToolTip": "Proxy\\Proxy.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAPQAAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Sara\\source\\repos\\Sophia_gps_server\\Proxy\\Proxy.cs*",
+              "RelativeToolTip": "Proxy\\Proxy.cs*",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAgwBQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-25T08:51:37.979Z",
               "EditorCaption": ""
@@ -39,9 +39,9 @@
               "Title": "IProxy.cs",
               "DocumentMoniker": "C:\\Users\\Sara\\source\\repos\\Sophia_gps_server\\Proxy\\IProxy.cs",
               "RelativeDocumentMoniker": "Proxy\\IProxy.cs",
-              "ToolTip": "C:\\Users\\Sara\\source\\repos\\Sophia_gps_server\\Proxy\\IProxy.cs",
-              "RelativeToolTip": "Proxy\\IProxy.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Sara\\source\\repos\\Sophia_gps_server\\Proxy\\IProxy.cs*",
+              "RelativeToolTip": "Proxy\\IProxy.cs*",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABkAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-25T08:48:55.796Z",
               "EditorCaption": ""

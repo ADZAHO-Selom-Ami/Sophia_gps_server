@@ -1,4 +1,4 @@
-﻿using Nest;
+﻿u
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,20 +6,21 @@ using System.Linq;
 using System.Device.Location;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
+using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using GeoCoordinate = System.Device.Location.GeoCoordinate;
 
 namespace Proxy
 {
     public class Proxy : IProxy
-
     {
-        private static readonly HttpClient client = new HttpClient();
-        private const string ApiKey = "8d9168bd963b85bab2899622e5d944bf9fc7e53a";
+        private const string NominatimUrl = "https://nominatim.openstreetmap.org/search";
         private const string ApiUrl = "https://api.jcdecaux.com/vls/v1";
+        private const string ApiKey = "8d9168bd963b85bab2899622e5d944bf9fc7e53a";
+        private static readonly HttpClient client = new HttpClient();
+
+     
         public double CalculateDistance(Position origin, Position destination)
         {
             var originCoordinate = new GeoCoordinate(origin.Lat, origin.Lng);
@@ -27,12 +28,10 @@ namespace Proxy
             return originCoordinate.GetDistanceTo(destinationCoordinate);
         }
 
-
-
-
+        
         public Station FindClosestStation(Position chosenStation, List<Station> stations)
         {
-            var chosenCoordinate = new System.Device.Location.GeoCoordinate(chosenStation.Lat, chosenStation.Lng);
+            var chosenCoordinate = new GeoCoordinate(chosenStation.Lat, chosenStation.Lng);
             Station closestStation = null;
             double closestDistance = double.MaxValue;
 
@@ -56,13 +55,11 @@ namespace Proxy
             return closestStation;
         }
 
-
         public async Task<Contract> GetContractByCityAsync(string city)
         {
             var contracts = await GetContracts();
             return contracts.FirstOrDefault(contract => contract.City.Equals(city, StringComparison.OrdinalIgnoreCase));
         }
-
 
         public async Task<List<Contract>> GetContracts()
         {
@@ -74,129 +71,137 @@ namespace Proxy
             return response;
         }
 
-        public async Task<string> GetInineraryByWalking(Position origin, Position destination)
+        public enum TravelMode
+        {
+            Walking,
+            Biking
+        }
+
+        
+        public async Task<string> GetItinerary(Position origin, Position destination, TravelMode mode)
         {
             try
             {
-                var response = await client.GetFromJsonAsync<string>($"{ApiUrl}/routes?origin={origin.Lat},{origin.Lng}&destination={destination.Lat},{destination.Lng}&mode=walking&apiKey={ApiKey}");
-                if (response == null)
-                {
-                    throw new Exception("Failed to retrieve walking itinerary");
-                }
-                return response;
+                string modePath = mode == TravelMode.Walking ? "foot-walking" : "cycling-regular";
+                var url = $"https://api.openrouteservice.org/v2/directions/{modePath}?api_key={ApiKey}&start={origin.Lng},{origin.Lat}&end={destination.Lng},{destination.Lat}";
+
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                return await response.Content.ReadAsStringAsync();
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while retrieving the walking itinerary: " + ex.Message);
+                throw new Exception($"Error fetching {mode.ToString().ToLower()} itinerary: {ex.Message}");
             }
         }
 
-        public async Task<string> GetInineraryForBike(Position origin, Position destination)
+      
+        public async Task<string> GetFullItineraryInCaseOfBike(Position origin, Position destination, string city)
         {
             try
             {
-                var response = await client.GetFromJsonAsync<string>($"{ApiUrl}/routes?origin={origin.Lat},{origin.Lng}&destination={destination.Lat},{destination.Lng}&mode=biking&apiKey={ApiKey}");
-                if (response == null)
-                {
-                    throw new Exception("Failed to retrieve biking itinerary");
-                }
-                return response;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while retrieving the biking itinerary: " + ex.Message);
-            }
-
-        }
-
-        public async Task<string> GetFullItineraryInCaseOfBike(Position origin, Position destination)
-        {
-            try
-            {
-                
-
-                var stations = await GetStations(GetCityNameByCoordinates(origin.Lat , origin.Lng).ToString());
+                var stations = await GetStations(city);
                 var firstStation = FindClosestStation(origin, stations);
-
                 var lastStation = FindClosestStation(destination, stations);
 
-                var walkItinerary = await GetInineraryByWalking(origin, firstStation.Position);
+                var walkItinerary = await GetItinerary(origin, firstStation.Position, TravelMode.Walking);
+                var bikeItinerary = await GetItinerary(firstStation.Position, lastStation.Position, TravelMode.Biking);
+                var finalItinerary = await GetItinerary(lastStation.Position, destination, TravelMode.Walking);
 
-                var bikeItinerary = await GetInineraryForBike(firstStation.Position, lastStation.Position);
-
-                var finalItinerary = await GetInineraryForBike(lastStation.Position, destination);
-
-                
-                return $"Walk to bike station: {walkItinerary} \n" +
-                       $"Bike to second station: {bikeItinerary} \n" +
+                return $"Walk to bike station: {walkItinerary}\n" +
+                       $"Bike to second station: {bikeItinerary}\n" +
                        $"Final leg to destination: {finalItinerary}";
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to retrieve full itinerary: " + ex.Message);
+                throw new Exception($"Failed to retrieve full itinerary: {ex.Message}");
             }
         }
 
-
-
-        public string GetInstructions(string intinerary)
+        public async Task<string> GetTownFromAddressAsync(string address)
         {
-            throw new NotImplementedException();
-        }
+            string url = $"{NominatimUrl}?q={Uri.EscapeDataString(address)}&format=json&addressdetails=1&limit=1";
 
-
-        public async Task<string> GetCityNameByCoordinates(double lat, double lng)
-        {
             try
             {
-                
+                var response = await client.GetStringAsync(url);
+                var doc = JsonDocument.Parse(response);
 
-                var response = await client.GetFromJsonAsync<ReverseGeocodeResponse>(ApiUrl);
-                if (response == null || string.IsNullOrEmpty(response.City))
+                if (doc.RootElement.GetArrayLength() > 0 &&
+                    doc.RootElement[0].TryGetProperty("address", out var addressElement) &&
+                    addressElement.TryGetProperty("town", out var town))
                 {
-                    throw new Exception("Failed to retrieve city name from coordinates");
+                    return town.GetString();
                 }
-                return response.City;
+
+                return "Town not found";
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while retrieving the city name: " + ex.Message);
+                throw new Exception($"Error fetching town from address: {ex.Message}");
             }
         }
 
+        public async Task<Position> GetCoordinates(string address)
+        {
+            try
+            {
+                var uri = $"{NominatimUrl}?q={Uri.EscapeDataString(address)}&format=json&addressdetails=1&limit=1";
+                var response = await client.GetFromJsonAsync<List<GeocodeResponse>>(uri);
 
+                if (response != null && response.Any())
+                {
+                    var location = response.First();
+
+                    if (double.TryParse(location.Lat, NumberStyles.Float, CultureInfo.InvariantCulture, out var latitude) &&
+                        double.TryParse(location.Lon, NumberStyles.Float, CultureInfo.InvariantCulture, out var longitude))
+                    {
+                        return new Position { Lat = latitude, Lng = longitude };
+                    }
+
+                    throw new Exception($"Invalid coordinates returned: Lat={location.Lat}, Lon={location.Lon}");
+                }
+
+                throw new Exception("No results returned from geolocation API.");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching geolocation for address '{address}': {ex.Message}");
+            }
+        }
 
         public async Task<List<Station>> GetStations(string contractName)
         {
-
             var response = await client.GetFromJsonAsync<List<Station>>($"{ApiUrl}/stations?contract={contractName}&apiKey={ApiKey}");
             if (response == null)
             {
                 throw new Exception("Failed to retrieve stations");
             }
             return response;
-
         }
 
-        public async Task<string> DecideItinerary(Position origin, Position destination)
+        public async Task<string> GetInstructions(string originAddress, string destinationAddress)
         {
             try
             {
+                var origin = await GetCoordinates(originAddress);
+                var city = GetTownFromAddressAsync(originAddress);
+                var destination = await GetCoordinates(destinationAddress);
                 var walkingEstimate = await GetWalkingTime(origin, destination);
-                var bikingEstimate = await GetBikingTimeWithStations(origin, destination);
+                var bikingEstimate = await GetBikingTimeWithStations(origin, destination , city.ToString());
 
                 if (walkingEstimate.TotalMinutes < bikingEstimate.TotalMinutes)
                 {
-                    return "Walking is faster for this route.";
+                    return "Walking is recommended for this route.";
                 }
-                else
-                {
-                    return "Biking is faster for this route.";
-                }
+
+                var fullBikeItinerary = await GetFullItineraryInCaseOfBike(origin, destination, "cityNameHere");
+                return $"Biking is recommended for this route. Here's the detailed itinerary:\n{fullBikeItinerary}";
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while deciding the itinerary: " + ex.Message);
+                throw new Exception($"Error getting instructions: {ex.Message}");
             }
         }
 
@@ -210,9 +215,10 @@ namespace Proxy
             return TimeSpan.FromMinutes(response.EstimatedMinutes);
         }
 
-        public async Task<TimeSpan> GetBikingTimeWithStations(Position origin, Position destination)
+        public async Task<TimeSpan> GetBikingTimeWithStations(Position origin, Position destination , string city)
         {
-            var stations = await GetStations(GetCityNameByCoordinates(origin.Lat, origin.Lng).ToString());
+            //Trying to figure out how to get the city name here , from the adresses given for instructions
+            var stations = await GetStations(city);
             var firstStation = FindClosestStation(origin, stations);
             var lastStation = FindClosestStation(destination, stations);
 
@@ -223,6 +229,8 @@ namespace Proxy
             return toFirstStationTime + bikingTime + fromLastStationTime;
         }
 
+      
+
         public async Task<TimeSpan> GetBikingTime(Position origin, Position destination)
         {
             var response = await client.GetFromJsonAsync<TravelTimeResponse>($"{ApiUrl}/timeestimate?origin={origin.Lat},{origin.Lng}&destination={destination.Lat},{destination.Lng}&mode=biking&apiKey={ApiKey}");
@@ -232,21 +240,39 @@ namespace Proxy
             }
             return TimeSpan.FromMinutes(response.EstimatedMinutes);
         }
-
-      
-        public class TravelTimeResponse
-        {
-            public double EstimatedMinutes { get; set; }
-        }
-
-
-
     }
 
+    public class TravelTimeResponse
+    {
+        public double EstimatedMinutes { get; set; }
+    }
+
+    public class GeocodeResponse
+    {
+        [JsonPropertyName("lat")]
+        public string Lat { get; set; }
+
+        [JsonPropertyName("lon")]
+        public string Lon { get; set; }
+
+        [JsonPropertyName("display_name")]
+        public string DisplayName { get; set; }
+
+        [JsonPropertyName("address")]
+        public Address Address { get; set; }
+    }
+
+    public class Address
+    {
+        [JsonPropertyName("house_number")]
+        public string HouseNumber { get; set; }
+
+        [JsonPropertyName("road")]
+        public string Road { get; set; }
+
+        [JsonPropertyName("town")]
+        public string Town { get; set; }
+    }
 
    
-    public class ReverseGeocodeResponse
-    {
-        public string City { get; set; }
-    }
 }
