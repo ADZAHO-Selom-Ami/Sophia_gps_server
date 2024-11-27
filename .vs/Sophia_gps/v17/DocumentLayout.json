@@ -3,23 +3,27 @@
   "WorkspaceRootPath": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|d:\\polytech\\si4\\semestre_7\\middleware\\projet\\sophia_gps_server\\proxy\\proxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|solutionrelative:proxy\\proxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B10B8716-D7F9-40D9-AA67-39C744A88632}|RoutingServer\\RoutingServer.csproj|d:\\polytech\\si4\\semestre_7\\middleware\\projet\\sophia_gps_server\\routingserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B10B8716-D7F9-40D9-AA67-39C744A88632}|RoutingServer\\RoutingServer.csproj|solutionrelative:routingserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|d:\\polytech\\si4\\semestre_7\\middleware\\projet\\sophia_gps_server\\proxy\\genericproxycache.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|solutionrelative:proxy\\genericproxycache.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\proxy\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|solutionrelative:proxy\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\proxy\\iproxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|solutionrelative:proxy\\iproxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B10B8716-D7F9-40D9-AA67-39C744A88632}|RoutingServer\\RoutingServer.csproj|d:\\polytech\\si4\\semestre_7\\middleware\\projet\\sophia_gps_server\\routingserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B10B8716-D7F9-40D9-AA67-39C744A88632}|RoutingServer\\RoutingServer.csproj|solutionrelative:routingserver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\proxy\\genericproxycache.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|solutionrelative:proxy\\genericproxycache.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B10B8716-D7F9-40D9-AA67-39C744A88632}|RoutingServer\\RoutingServer.csproj|d:\\polytech\\si4\\semestre_7\\middleware\\projet\\sophia_gps_server\\routingserver\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\proxy\\proxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|solutionrelative:proxy\\proxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B10B8716-D7F9-40D9-AA67-39C744A88632}|RoutingServer\\RoutingServer.csproj|D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\routingserver\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B10B8716-D7F9-40D9-AA67-39C744A88632}|RoutingServer\\RoutingServer.csproj|solutionrelative:routingserver\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -27,8 +31,8 @@
       "RelativeMoniker": "D:0:0:{B10B8716-D7F9-40D9-AA67-39C744A88632}|RoutingServer\\RoutingServer.csproj|solutionrelative:routingserver\\iserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|d:\\polytech\\si4\\semestre_7\\middleware\\projet\\sophia_gps_server\\proxy\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}|Proxy\\Proxy.csproj|solutionrelative:proxy\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+      "AbsoluteMoniker": "D:0:0:{B10B8716-D7F9-40D9-AA67-39C744A88632}|RoutingServer\\RoutingServer.csproj|D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\routingserver\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{B10B8716-D7F9-40D9-AA67-39C744A88632}|RoutingServer\\RoutingServer.csproj|solutionrelative:routingserver\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,85 +42,80 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\RoutingServer\\Program.cs",
               "RelativeDocumentMoniker": "RoutingServer\\Program.cs",
               "ToolTip": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\RoutingServer\\Program.cs",
               "RelativeToolTip": "RoutingServer\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAYwBgAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-25T10:47:30.157Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "GenericProxyCache.cs",
-              "DocumentMoniker": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\Proxy\\GenericProxyCache.cs",
-              "RelativeDocumentMoniker": "Proxy\\GenericProxyCache.cs",
-              "ToolTip": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\Proxy\\GenericProxyCache.cs",
-              "RelativeToolTip": "Proxy\\GenericProxyCache.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAuwCYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-25T10:14:02.943Z",
-              "EditorCaption": ""
+              "DocumentIndex": 7,
+              "Title": "App.config",
+              "DocumentMoniker": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\RoutingServer\\App.config",
+              "RelativeDocumentMoniker": "RoutingServer\\App.config",
+              "ToolTip": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\RoutingServer\\App.config",
+              "RelativeToolTip": "RoutingServer\\App.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAwwBEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2024-11-26T13:43:01.465Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "Proxy.cs",
               "DocumentMoniker": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\Proxy\\Proxy.cs",
               "RelativeDocumentMoniker": "Proxy\\Proxy.cs",
               "ToolTip": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\Proxy\\Proxy.cs",
               "RelativeToolTip": "Proxy\\Proxy.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAAAYwEEAAAAGAAAAAAAAAA==",
+              "ViewState": "AgIAABcAAAAAAAAAAAAAwBwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-25T08:51:37.979Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-25T08:51:37.979Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Server.cs",
               "DocumentMoniker": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\RoutingServer\\Server.cs",
               "RelativeDocumentMoniker": "RoutingServer\\Server.cs",
               "ToolTip": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\RoutingServer\\Server.cs",
               "RelativeToolTip": "RoutingServer\\Server.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAA8AAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwCIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-25T10:34:03.678Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-25T10:34:03.678Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "App.config",
-              "DocumentMoniker": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\Proxy\\App.config",
-              "RelativeDocumentMoniker": "Proxy\\App.config",
-              "ToolTip": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\Proxy\\App.config",
-              "RelativeToolTip": "Proxy\\App.config",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
-              "WhenOpened": "2024-11-25T09:02:03.384Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
               "Title": "IServer.cs",
               "DocumentMoniker": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\RoutingServer\\IServer.cs",
               "RelativeDocumentMoniker": "RoutingServer\\IServer.cs",
               "ToolTip": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\RoutingServer\\IServer.cs",
               "RelativeToolTip": "RoutingServer\\IServer.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAswBMAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-25T08:49:50.112Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-25T08:49:50.112Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "App.config",
+              "DocumentMoniker": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\Proxy\\App.config",
+              "RelativeDocumentMoniker": "Proxy\\App.config",
+              "ToolTip": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\Proxy\\App.config",
+              "RelativeToolTip": "Proxy\\App.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGEAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2024-11-25T09:02:03.384Z"
             },
             {
               "$type": "Document",
@@ -126,10 +125,21 @@
               "RelativeDocumentMoniker": "Proxy\\IProxy.cs",
               "ToolTip": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\Proxy\\IProxy.cs",
               "RelativeToolTip": "Proxy\\IProxy.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAzwCIAAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAwBMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-25T08:48:55.796Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-25T08:48:55.796Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GenericProxyCache.cs",
+              "DocumentMoniker": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\Proxy\\GenericProxyCache.cs",
+              "RelativeDocumentMoniker": "Proxy\\GenericProxyCache.cs",
+              "ToolTip": "D:\\POLYTECH\\SI4\\SEMESTRE_7\\MIDDLEWARE\\PROJET\\Sophia_gps_server\\Proxy\\GenericProxyCache.cs",
+              "RelativeToolTip": "Proxy\\GenericProxyCache.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAIwCYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-25T10:14:02.943Z"
             },
             {
               "$type": "Bookmark",

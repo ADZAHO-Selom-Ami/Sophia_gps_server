@@ -14,17 +14,19 @@ namespace RoutingServer
 {
     public class Server : IServer
     {
-        private readonly Proxy _proxy;
+        //private readonly Proxy _proxy;
 
         public Server()
         {
-            _proxy = new Proxy();
+            //_proxy = new Proxy();
         }
 
         public async Task<string> GetItinerary(string origin, string destination)
         {
             // Appeler le serveur SOAP proxy pour obtenir l'itinéraire
-            var itinerary = await _proxy.GetInineraryForBikeAsync(origin, destination);
+            //var itinerary = await _proxy.GetInineraryForBikeAsync(origin, destination);
+
+            var itinerary = "Hello World";
 
             // Envoyer l'itinéraire dans une queue (par exemple, ActiveMQ)
             await SendToQueue(itinerary);

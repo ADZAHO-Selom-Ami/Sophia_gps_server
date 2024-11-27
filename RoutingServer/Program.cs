@@ -39,21 +39,4 @@ namespace RoutingServer
         }
     }
 
-    public class Itinerary
-    {
-        public string Origin { get; set; }
-        public string Destination { get; set; }
-        public List<string> Steps { get; set; }
-
-        public Itinerary()
-        {
-            Steps = new List<string>();
-        }
-
-        public void AddStep(string step)
-        {
-            Steps.Add(step);
-        }
-    }
-
 }
