@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Proxy
 {
-    [ServiceContract] // Indicates that this interface defines a WCF service contract.
+    [ServiceContract]
     public interface IProxy
     {
 
@@ -16,6 +16,8 @@ namespace Proxy
         [OperationContract]
         Station FindClosestStation(Position chosenStation, List<Station> stations);
 
+
+
         [OperationContract]
         Task<Contract> GetContractByCityAsync(string city);
 
@@ -23,28 +25,20 @@ namespace Proxy
         Task<List<Contract>> GetContracts();
 
         [OperationContract]
-        Task<string> GetInineraryByWalking(Position origin, Position destination);
 
-        [OperationContract]
-        Task<string> GetInineraryForBike(Position origin, Position destination);
+        Task<string> GetFullItineraryInCaseOfBike(Position origin, Position destination, string city);
 
-        [OperationContract]
-        Task<string> GetFullItineraryInCaseOfBike(Position origin, Position destination);
-
-        [OperationContract]
-        Task<string> GetCityNameByCoordinates(double lat, double lng);
 
         [OperationContract]
         Task<List<Station>> GetStations(string contractName);
 
-        [OperationContract]
-        Task<string> DecideItinerary(Position origin, Position destination);
+
 
         [OperationContract]
         Task<TimeSpan> GetWalkingTime(Position origin, Position destination);
 
         [OperationContract]
-        Task<TimeSpan> GetBikingTimeWithStations(Position origin, Position destination);
+        Task<TimeSpan> GetBikingTimeWithStations(Position origin, Position destination, string city);
 
         [OperationContract]
         Task<TimeSpan> GetBikingTime(Position origin, Position destination);
