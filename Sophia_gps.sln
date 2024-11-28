@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proxy", "Proxy\Proxy.csproj", "{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoutingServer", "RoutingServer\RoutingServer.csproj", "{B10B8716-D7F9-40D9-AA67-39C744A88632}"
+	ProjectSection(ProjectDependencies) = postProject
+		{35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D} = {35B7CBDD-62CD-4CAA-BF37-6422A09CFC7D}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -8,31 +8,37 @@ using System.Text;
 using System.Threading.Tasks;
 using Apache.NMS;
 using Apache.NMS.ActiveMQ;
+using Newtonsoft.Json;
+using RoutingServer.ProxyService;
 using ISession = Apache.NMS.ISession;
 
 namespace RoutingServer
 {
     public class Server : IServer
     {
-        //private readonly Proxy _proxy;
+        private readonly ProxyClient _proxy;
 
         public Server()
         {
-            //_proxy = new Proxy();
+            _proxy = new ProxyClient(new BasicHttpBinding(), new EndpointAddress("http://localhost:8733/Design_Time_Addresses/Proxy/"));
         }
 
         public async Task<string> GetItinerary(string origin, string destination)
         {
             // Appeler le serveur SOAP proxy pour obtenir l'itinéraire
-            //var itinerary = await _proxy.GetInineraryForBikeAsync(origin, destination);
+            /*var itinerary = await  _proxy.GetContractsAsync();
 
-            var itinerary = "Hello World";
+            // Convertir l'itinéraire en JSON
+            string itineraryJson = JsonConvert.SerializeObject(itinerary);*/
+
+            string itineraryJson = "Hello World";
 
             // Envoyer l'itinéraire dans une queue (par exemple, ActiveMQ)
-            await SendToQueue(itinerary);
+            await SendToQueue(itineraryJson);
 
-            return itinerary;
+            return itineraryJson;
         }
+
 
         private async Task SendToQueue(string message)
         {
