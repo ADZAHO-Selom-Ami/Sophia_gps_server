@@ -23,7 +23,7 @@ namespace RoutingServer
                 }
             };
 
-            var _proxy = new ProxyClient(binding, new EndpointAddress("http://localhost:8733/Design_Time_Addresses/Proxy/"));
+            var _proxy = new ProxyClient(binding, new EndpointAddress("http://localhost:8090/MyService/Proxy/"));
             var itinerary = await GetFullItineraryInCaseOfBikeAsync(origin, destination);
 
             var itineraryJson = JsonConvert.SerializeObject(itinerary);
@@ -43,7 +43,7 @@ namespace RoutingServer
                 }
             };
 
-            var _proxy = new ProxyClient(binding, new EndpointAddress("http://localhost:8733/Design_Time_Addresses/Proxy/"));
+            var _proxy = new ProxyClient(binding, new EndpointAddress("http://localhost:8090/MyService/Proxy/"));
             try
             {
                 var originCoordinates = await _proxy.GetCoordinatesAsync(origin).ConfigureAwait(false);
