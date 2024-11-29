@@ -174,6 +174,7 @@ namespace Proxy
 
             var chosenCoordinate = new GeoCoordinate(chosenPosition.Lat, chosenPosition.Lng);
             return stations
+                .Where(station => station.Status == "OPEN" && station.Available_bikes > 0)
                 .Select(station => new
                 {
                     Station = station,
@@ -183,6 +184,7 @@ namespace Proxy
                 .FirstOrDefault()?.Station
                 ?? throw new Exception("No closest station found.");
         }
+
 
         private async Task<Itinerary> GetItineraryAsync(Position origin, Position destination, TravelMode mode, string key)
         {

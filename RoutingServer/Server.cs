@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using Apache.NMS;
 using Apache.NMS.ActiveMQ;
@@ -14,6 +15,8 @@ namespace RoutingServer
     {
         public async Task<FullItineraryResult> GetItinerary(string origin, string destination)
         {
+            AddCorsHeaders();
+
             var binding = new BasicHttpBinding
             {
                 MaxReceivedMessageSize = 10 * 1024 * 1024, // 10 Mo
@@ -98,6 +101,8 @@ namespace RoutingServer
 
         public FullItineraryResult ReceiveFromQueue()
         {
+            AddCorsHeaders();
+
             Uri connecturi = new Uri("activemq:tcp://localhost:61616");
             IConnectionFactory factory = new ConnectionFactory(connecturi);
             using (IConnection connection = factory.CreateConnection())
@@ -127,6 +132,17 @@ namespace RoutingServer
                         return null;
                     }
                 }
+            }
+        }
+
+        private void AddCorsHeaders()
+        {
+            var context = WebOperationContext.Current;
+            if (context != null)
+            {
+                context.OutgoingResponse.Headers.Add("Access-Control-Allow-Origin", "*");
+                context.OutgoingResponse.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+                context.OutgoingResponse.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept");
             }
         }
     }
