@@ -1,44 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
-using System.ServiceModel.Channels;
-using System.Text;
 using System.Threading.Tasks;
 using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Newtonsoft.Json;
 using RoutingServer.ProxyService;
-using ISession = Apache.NMS.ISession;
 
 namespace RoutingServer
 {
     public class Server : IServer
     {
-        private readonly ProxyClient _proxy;
-
-        public Server()
+        public async Task<FullItineraryResult> GetItinerary(string origin, string destination)
         {
-            _proxy = new ProxyClient(new BasicHttpBinding(), new EndpointAddress("http://localhost:8733/Design_Time_Addresses/Proxy/"));
+            var binding = new BasicHttpBinding
+            {
+                MaxReceivedMessageSize = 10 * 1024 * 1024, // 10 Mo
+                ReaderQuotas = {
+                    MaxStringContentLength = 10 * 1024 * 1024,
+                    MaxArrayLength = 10 * 1024 * 1024
+                }
+            };
+
+            var _proxy = new ProxyClient(binding, new EndpointAddress("http://localhost:8733/Design_Time_Addresses/Proxy/"));
+            var itinerary = await GetFullItineraryInCaseOfBikeAsync(origin, destination);
+
+            var itineraryJson = JsonConvert.SerializeObject(itinerary);
+            await SendToQueue(itineraryJson); 
+
+            return itinerary;
         }
 
-        public async Task<string> GetItinerary(string origin, string destination)
+        private async Task<FullItineraryResult> GetFullItineraryInCaseOfBikeAsync(string origin, string destination)
         {
-            // Appeler le serveur SOAP proxy pour obtenir l'itinéraire
-            /*var itinerary = await  _proxy.GetContractsAsync();
+            var binding = new BasicHttpBinding
+            {
+                MaxReceivedMessageSize = 10 * 1024 * 1024,
+                ReaderQuotas = {
+                    MaxStringContentLength = 10 * 1024 * 1024,
+                    MaxArrayLength = 10 * 1024 * 1024
+                }
+            };
 
-            // Convertir l'itinéraire en JSON
-            string itineraryJson = JsonConvert.SerializeObject(itinerary);*/
+            var _proxy = new ProxyClient(binding, new EndpointAddress("http://localhost:8733/Design_Time_Addresses/Proxy/"));
+            try
+            {
+                var originCoordinates = await _proxy.GetCoordinatesAsync(origin).ConfigureAwait(false);
+                var destinationCoordinates = await _proxy.GetCoordinatesAsync(destination).ConfigureAwait(false);
 
-            string itineraryJson = "Hello World";
+                var contractOrigin = await _proxy.GetContractByCityAsync(originCoordinates.Address.City).ConfigureAwait(false);
+                var contractDestination = await _proxy.GetContractByCityAsync(destinationCoordinates.Address.City).ConfigureAwait(false);
 
-            // Envoyer l'itinéraire dans une queue (par exemple, ActiveMQ)
-            await SendToQueue(itineraryJson);
+                var firstStation = await _proxy.FindClosestStationAsync(new Position { Lat = originCoordinates.Lat, Lng = originCoordinates.Lon }, contractOrigin.Name).ConfigureAwait(false);
+                var lastStation = await _proxy.FindClosestStationAsync(new Position { Lat = destinationCoordinates.Lat, Lng = destinationCoordinates.Lon }, contractDestination.Name).ConfigureAwait(false);
 
-            return itineraryJson;
+                var itineraries = new List<Itinerary>
+                {
+                    await _proxy.GetItineraryAsync(new Position { Lat = originCoordinates.Lat, Lng = originCoordinates.Lon }, firstStation.Position, TravelMode.Walking, "walkingA").ConfigureAwait(false),
+                    await _proxy.GetItineraryAsync(firstStation.Position, lastStation.Position, TravelMode.Biking, "biking").ConfigureAwait(false),
+                    await _proxy.GetItineraryAsync(lastStation.Position, new Position { Lat = destinationCoordinates.Lat, Lng = destinationCoordinates.Lon }, TravelMode.Walking, "walkingB").ConfigureAwait(false)
+                };
+
+                return new FullItineraryResult
+                {
+                    Itineraries = itineraries,
+                    FirstStation = firstStation,
+                    LastStation = lastStation
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to compute the full itinerary with bikes. Details: {ex.Message}", ex);
+            }
         }
-
 
         private async Task SendToQueue(string message)
         {
@@ -54,16 +89,14 @@ namespace RoutingServer
                     {
                         producer.DeliveryMode = MsgDeliveryMode.NonPersistent;
                         ITextMessage textMessage = producer.CreateTextMessage(message);
+
                         await Task.Run(() => producer.Send(textMessage));
                     }
-
-                    session.Close();
                 }
-                connection.Close();
             }
         }
 
-        public string ReceiveFromQueue()
+        public FullItineraryResult ReceiveFromQueue()
         {
             Uri connecturi = new Uri("activemq:tcp://localhost:61616");
             IConnectionFactory factory = new ConnectionFactory(connecturi);
@@ -75,24 +108,33 @@ namespace RoutingServer
                     IDestination destination = session.GetQueue("itineraryQueue");
                     using (IMessageConsumer consumer = session.CreateConsumer(destination))
                     {
-                        ITextMessage message = consumer.Receive() as ITextMessage;
-                        if (message != null)
+                        IMessage message;
+                        while ((message = consumer.Receive(TimeSpan.FromSeconds(1))) != null)
                         {
-                            return message.Text;
+                            if (message is ITextMessage textMessage)
+                            {
+                                try
+                                {
+                                    var fullItinerary = JsonConvert.DeserializeObject<FullItineraryResult>(textMessage.Text);
+                                    return fullItinerary;
+                                }
+                                catch (JsonSerializationException ex)
+                                {
+                                    Console.WriteLine($"Error deserializing message: {ex.Message}");
+                                }
+                            }
                         }
+                        return null;
                     }
-
-                    session.Close();
                 }
-                connection.Close();
             }
-            return null;
         }
     }
 
-    public class Position
+    public class FullItineraryResult
     {
-        public double Lat { get; set; }
-        public double Lng { get; set; }
+        public List<Itinerary> Itineraries { get; set; }
+        public Station FirstStation { get; set; }
+        public Station LastStation { get; set; }
     }
 }

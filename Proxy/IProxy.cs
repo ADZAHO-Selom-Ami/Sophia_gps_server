@@ -13,37 +13,21 @@ namespace Proxy
         GeocodeResponse GetCoordinates(string city);
 
         [OperationContract]
-        double CalculateDistance(Position origin, Position destination);
+        Station FindClosestStation(Position chosenStation, string contractName);
 
         [OperationContract]
-        Station FindClosestStation(Position chosenStation, List<Station> stations);
+        Contract GetContractByCity(string city); // Pas de Task
 
         [OperationContract]
-        Task<Contract> GetContractByCityAsync(string city);
+        List<Contract> GetContracts(); // Pas de Task
 
         [OperationContract]
-        Task<List<Contract>> GetContracts();
+        List<Station> GetStations(string contractName); // Pas de Task
 
         [OperationContract]
-        Task<List<Station>> GetStations(string contractName);
-
-        [OperationContract]
-        Task<Itinerary> GetItinerary(Position origin, Position destination, TravelMode mode);
-
-        [OperationContract]
-        Task<List<Itinerary>> GetFullItineraryInCaseOfBike(string origin, string destination);
-
-
-
-        /*        [OperationContract]
-                Task<TimeSpan> GetWalkingTime(Position origin, Position destination);
-
-                [OperationContract]
-                Task<TimeSpan> GetBikingTimeWithStations(Position origin, Position destination, string city);
-
-                [OperationContract]
-                Task<TimeSpan> GetBikingTime(Position origin, Position destination);*/
+        Itinerary GetItinerary(Position origin, Position destination, TravelMode mode, string key);
     }
+
 
     // Data contracts define how data is serialized and deserialized during service operations.
 }

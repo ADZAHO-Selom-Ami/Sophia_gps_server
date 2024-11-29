@@ -14,12 +14,6 @@
   <wsdl:message name="IProxy_GetCoordinates_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetCoordinatesResponse" />
   </wsdl:message>
-  <wsdl:message name="IProxy_CalculateDistance_InputMessage">
-    <wsdl:part name="parameters" element="tns:CalculateDistance" />
-  </wsdl:message>
-  <wsdl:message name="IProxy_CalculateDistance_OutputMessage">
-    <wsdl:part name="parameters" element="tns:CalculateDistanceResponse" />
-  </wsdl:message>
   <wsdl:message name="IProxy_FindClosestStation_InputMessage">
     <wsdl:part name="parameters" element="tns:FindClosestStation" />
   </wsdl:message>
@@ -50,20 +44,10 @@
   <wsdl:message name="IProxy_GetItinerary_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetItineraryResponse" />
   </wsdl:message>
-  <wsdl:message name="IProxy_GetFullItineraryInCaseOfBike_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetFullItineraryInCaseOfBike" />
-  </wsdl:message>
-  <wsdl:message name="IProxy_GetFullItineraryInCaseOfBike_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetFullItineraryInCaseOfBikeResponse" />
-  </wsdl:message>
   <wsdl:portType name="IProxy">
     <wsdl:operation name="GetCoordinates">
       <wsdl:input wsaw:Action="http://tempuri.org/IProxy/GetCoordinates" message="tns:IProxy_GetCoordinates_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IProxy/GetCoordinatesResponse" message="tns:IProxy_GetCoordinates_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="CalculateDistance">
-      <wsdl:input wsaw:Action="http://tempuri.org/IProxy/CalculateDistance" message="tns:IProxy_CalculateDistance_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IProxy/CalculateDistanceResponse" message="tns:IProxy_CalculateDistance_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="FindClosestStation">
       <wsdl:input wsaw:Action="http://tempuri.org/IProxy/FindClosestStation" message="tns:IProxy_FindClosestStation_InputMessage" />
@@ -85,24 +69,11 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IProxy/GetItinerary" message="tns:IProxy_GetItinerary_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IProxy/GetItineraryResponse" message="tns:IProxy_GetItinerary_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="GetFullItineraryInCaseOfBike">
-      <wsdl:input wsaw:Action="http://tempuri.org/IProxy/GetFullItineraryInCaseOfBike" message="tns:IProxy_GetFullItineraryInCaseOfBike_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IProxy/GetFullItineraryInCaseOfBikeResponse" message="tns:IProxy_GetFullItineraryInCaseOfBike_OutputMessage" />
-    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IProxy" type="tns:IProxy">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="GetCoordinates">
       <soap:operation soapAction="http://tempuri.org/IProxy/GetCoordinates" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="CalculateDistance">
-      <soap:operation soapAction="http://tempuri.org/IProxy/CalculateDistance" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -148,15 +119,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetItinerary">
       <soap:operation soapAction="http://tempuri.org/IProxy/GetItinerary" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetFullItineraryInCaseOfBike">
-      <soap:operation soapAction="http://tempuri.org/IProxy/GetFullItineraryInCaseOfBike" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

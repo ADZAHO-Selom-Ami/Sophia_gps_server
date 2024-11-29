@@ -15,33 +15,18 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="CalculateDistance">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="origin" nillable="true" type="q2:Position" />
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="destination" nillable="true" type="q3:Position" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="CalculateDistanceResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="CalculateDistanceResult" type="xs:double" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
   <xs:element name="FindClosestStation">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="chosenStation" nillable="true" type="q4:Position" />
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="stations" nillable="true" type="q5:ArrayOfStation" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="chosenStation" nillable="true" type="q2:Position" />
+        <xs:element minOccurs="0" name="contractName" nillable="true" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="FindClosestStationResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="FindClosestStationResult" nillable="true" type="q6:Station" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="FindClosestStationResult" nillable="true" type="q3:Station" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -55,7 +40,7 @@
   <xs:element name="GetContractByCityResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="GetContractByCityResult" nillable="true" type="q7:Contract" />
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="GetContractByCityResult" nillable="true" type="q4:Contract" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -67,7 +52,7 @@
   <xs:element name="GetContractsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="GetContractsResult" nillable="true" type="q8:ArrayOfContract" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="GetContractsResult" nillable="true" type="q5:ArrayOfContract" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -81,38 +66,24 @@
   <xs:element name="GetStationsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="GetStationsResult" nillable="true" type="q9:ArrayOfStation" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="GetStationsResult" nillable="true" type="q6:ArrayOfStation" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetItinerary">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="origin" nillable="true" type="q10:Position" />
-        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="destination" nillable="true" type="q11:Position" />
-        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="mode" type="q12:TravelMode" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="origin" nillable="true" type="q7:Position" />
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="destination" nillable="true" type="q8:Position" />
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="mode" type="q9:TravelMode" />
+        <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetItineraryResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="GetItineraryResult" nillable="true" type="q13:Itinerary" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="GetFullItineraryInCaseOfBike">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="origin" nillable="true" type="xs:string" />
-        <xs:element minOccurs="0" name="destination" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="GetFullItineraryInCaseOfBikeResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="GetFullItineraryInCaseOfBikeResult" nillable="true" type="q14:ArrayOfItinerary" />
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Proxy" minOccurs="0" name="GetItineraryResult" nillable="true" type="q10:Itinerary" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

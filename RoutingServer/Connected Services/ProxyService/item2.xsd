@@ -5,7 +5,7 @@
   <xs:complexType name="GeocodeResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="Address" nillable="true" type="tns:Address" />
-      <xs:element minOccurs="0" name="DisplayName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Display_Name" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Lat" type="xs:double" />
       <xs:element minOccurs="0" name="Lon" type="xs:double" />
     </xs:sequence>
@@ -13,9 +13,8 @@
   <xs:element name="GeocodeResponse" nillable="true" type="tns:GeocodeResponse" />
   <xs:complexType name="Address">
     <xs:sequence>
-      <xs:element minOccurs="0" name="HouseNumber" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Road" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Town" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="City" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Country" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Address" nillable="true" type="tns:Address" />
@@ -26,16 +25,10 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Position" nillable="true" type="tns:Position" />
-  <xs:complexType name="ArrayOfStation">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="Station" nillable="true" type="tns:Station" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfStation" nillable="true" type="tns:ArrayOfStation" />
   <xs:complexType name="Station">
     <xs:sequence>
-      <xs:element minOccurs="0" name="AvailableBike" type="xs:int" />
-      <xs:element minOccurs="0" name="AvailableStand" type="xs:int" />
+      <xs:element minOccurs="0" name="Available_bike_stands" type="xs:int" />
+      <xs:element minOccurs="0" name="Available_bikes" type="xs:int" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Number" type="xs:int" />
       <xs:element minOccurs="0" name="Position" nillable="true" type="tns:Position" />
@@ -56,6 +49,12 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ArrayOfContract" nillable="true" type="tns:ArrayOfContract" />
+  <xs:complexType name="ArrayOfStation">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Station" nillable="true" type="tns:Station" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfStation" nillable="true" type="tns:ArrayOfStation" />
   <xs:simpleType name="TravelMode">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Walking" />
@@ -68,6 +67,7 @@
       <xs:element minOccurs="0" name="Coordinates" nillable="true" type="tns:ArrayOfPosition" />
       <xs:element minOccurs="0" name="Distance" type="xs:double" />
       <xs:element minOccurs="0" name="Duration" type="ser:duration" />
+      <xs:element minOccurs="0" name="Key" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Steps" nillable="true" type="tns:ArrayOfStep" />
     </xs:sequence>
   </xs:complexType>
@@ -93,10 +93,4 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Step" nillable="true" type="tns:Step" />
-  <xs:complexType name="ArrayOfItinerary">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="Itinerary" nillable="true" type="tns:Itinerary" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfItinerary" nillable="true" type="tns:ArrayOfItinerary" />
 </xs:schema>

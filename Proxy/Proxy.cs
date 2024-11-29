@@ -1,15 +1,10 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Device.Location;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Globalization;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using System.Runtime.Serialization;
 
 namespace Proxy
 {
@@ -18,213 +13,246 @@ namespace Proxy
         private const string NominatimUrl = "https://nominatim.openstreetmap.org/search";
         private const string ApiUrl = "https://api.jcdecaux.com/vls/v1";
         private const string OpenRouteUrl = "https://api.openrouteservice.org/v2/directions";
+        private const string OpenRouteApiKey = "5b3ce3597851110001cf624881823d08157349c7abcde66f42aad2e3";
         private const string ApiKey = "8d9168bd963b85bab2899622e5d944bf9fc7e53a";
         private static readonly HttpClient client = new HttpClient();
 
+        // Cache instances
+        private GenericProxyCache<List<Contract>> contractCache = new GenericProxyCache<List<Contract>>();
+        private GenericProxyCache<List<Station>> stationCache = new GenericProxyCache<List<Station>>();
 
-        //Add method to check if same contract or not.
-
-        //Add method to get the nearest station without comparing to each station
-
-        //Peu de temps pour calculer la distance
-
-        //Bonne architecture de code
-
-        //CORS...
-
+        // --------- MÉTHODES PUBLIQUES EXPOSÉES ---------
 
         public GeocodeResponse GetCoordinates(string city)
         {
-            var response = client.GetFromJsonAsync<List<GeocodeResponse>>($"{NominatimUrl}?q={Uri.EscapeDataString(city)}&format=json&addressdetails=1&limit=1").Result;
-            if (response != null && response.Any())
-            {
-                var location = response.First();
-
-                var latitude = location.Lat;
-                var longitude = location.Lon;
-                var name = location.DisplayName;
-                var address = location.Address;
-
-                return new GeocodeResponse { Lat = latitude, Lon = longitude, DisplayName = name, Address = address };
-
-            }
-            throw new Exception("No results returned from geolocation API.");
+            return GetCoordinatesAsync(city).GetAwaiter().GetResult();
         }
 
-        public async Task<List<Contract>> GetContracts()
+        public List<Contract> GetContracts()
         {
-            var response = await client.GetFromJsonAsync<List<Contract>>($"{ApiUrl}/contracts?apiKey={ApiKey}");
-            if (response == null)
-            {
-                throw new Exception("Failed to retrieve contracts");
-            }
-            return response;
+            return GetContractsAsync().GetAwaiter().GetResult();
         }
 
-        public async Task<Contract> GetContractByCityAsync(string city)
+        public Contract GetContractByCity(string city)
         {
-            var contracts = await GetContracts();
-            foreach (var contract in contracts)
+            return GetContractByCityAsync(city).GetAwaiter().GetResult();
+        }
+
+        public List<Station> GetStations(string contractName)
+        {
+            return GetStationsAsync(contractName).GetAwaiter().GetResult();
+        }
+
+        public Station FindClosestStation(Position chosenPosition, string contractName)
+        {
+            return FindClosestStationInternalAsync(chosenPosition, contractName).GetAwaiter().GetResult();
+        }
+
+        public Itinerary GetItinerary(Position origin, Position destination, TravelMode mode, string key)
+        {
+            return GetItineraryAsync(origin, destination, mode, key).GetAwaiter().GetResult();
+        }
+
+        // --------- MÉTHODES INTERNES ASYNCHRONES ---------
+
+        private async Task<GeocodeResponse> GetCoordinatesAsync(string city)
+        {
+            try
             {
-                if (contract.Cities.Contains(city))
+                var request = new HttpRequestMessage(HttpMethod.Get, $"{NominatimUrl}?q={Uri.EscapeDataString(city)}&format=json&addressdetails=1&limit=1");
+                request.Headers.Add("User-Agent", "Sophia_gps/1.0 (adzahostacy@gmail.com)");
+
+                var response = await client.SendAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    return contract;
+                    var data = await response.Content.ReadFromJsonAsync<List<GeocodeResponse>>().ConfigureAwait(false);
+                    if (data == null || !data.Any())
+                    {
+                        throw new Exception($"No results returned from geolocation API for city: {city}");
+                    }
+
+                    return data.First();
                 }
-
-            }
-            throw new Exception("Failed to find contract for city");
-
-        }
-
-        public async Task<List<Station>> GetStations(string contractName)
-        {
-            var response = await client.GetFromJsonAsync<List<Station>>($"{ApiUrl}/stations?contract={contractName}&apiKey={ApiKey}");
-            if (response == null)
-            {
-                throw new Exception("Failed to retrieve stations");
-            }
-            return response;
-        }
-
-        public Station FindClosestStation(Position chosenStation, List<Station> stations)
-        {
-            var chosenCoordinate = new GeoCoordinate(chosenStation.Lat, chosenStation.Lng);
-            Station closestStation = null;
-            double closestDistance = double.MaxValue;
-
-            foreach (var station in stations)
-            {
-                var stationCoordinate = new GeoCoordinate(station.Position.Lat, station.Position.Lng);
-                double distance = chosenCoordinate.GetDistanceTo(stationCoordinate);
-
-                if (distance < closestDistance)
+                else
                 {
-                    closestDistance = distance;
-                    closestStation = station;
+                    throw new Exception($"Failed to fetch coordinates. HTTP Status: {response.StatusCode}");
                 }
             }
-
-            if (closestStation == null)
+            catch (Exception ex)
             {
-                throw new Exception("Failed to find the closest station");
+                throw new Exception($"Error while fetching coordinates for city: {city}. Details: {ex.Message}", ex);
+            }
+        }
+
+
+
+        private async Task<List<Contract>> GetContractsAsync()
+        {
+            try
+            {
+                // Vérification du cache
+                var contracts = contractCache.Get("contracts");
+                if (contracts != null && contracts.Any())
+                {
+                    return contracts;
+                }
+
+                // Si non présent dans le cache, appel API
+                var response = await client.GetFromJsonAsync<List<Contract>>($"{ApiUrl}/contracts?apiKey={ApiKey}").ConfigureAwait(false);
+                if (response == null)
+                {
+                    throw new Exception("Failed to retrieve contracts.");
+                }
+
+                // Mise en cache
+                contractCache.Get("contracts", 300);  // Exemple d'expiration après 5 minutes
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while fetching contracts. Details: " + ex.Message, ex);
+            }
+        }
+
+        private async Task<Contract> GetContractByCityAsync(string city)
+        {
+            var contracts = await GetContractsAsync().ConfigureAwait(false);
+
+            if (contracts == null || !contracts.Any())
+            {
+                throw new Exception("No contracts available.");
             }
 
-            return closestStation;
+            var contract = contracts.FirstOrDefault(c => c.Cities != null && c.Cities.Contains(city));
+
+            if (contract == null)
+            {
+                throw new Exception($"No contract found for city: {city}");
+            }
+
+            return contract;
         }
 
-        public double CalculateDistance(Position origin, Position destination)
+        private async Task<List<Station>> GetStationsAsync(string contractName)
         {
-            var originCoordinate = new GeoCoordinate(origin.Lat, origin.Lng);
-            var destinationCoordinate = new GeoCoordinate(destination.Lat, destination.Lng);
-            return originCoordinate.GetDistanceTo(destinationCoordinate);
+            try
+            {
+                // Vérification du cache
+                var stations = stationCache.Get(contractName);
+                if (stations != null && stations.Any())
+                {
+                    return stations;
+                }
+
+                // Si non présent dans le cache, appel API
+                var response = await client.GetFromJsonAsync<List<Station>>($"{ApiUrl}/stations?contract={contractName}&apiKey={ApiKey}").ConfigureAwait(false);
+
+                if (response == null)
+                {
+                    throw new Exception($"Failed to retrieve stations for contract: {contractName}");
+                }
+
+                // Mise en cache
+                stationCache.Get(contractName, 300);  // Exemple d'expiration après 5 minutes
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error while fetching stations for contract: {contractName}. Details: {ex.Message}", ex);
+            }
         }
 
-        public async Task<Itinerary> GetItinerary(Position origin, Position destination, TravelMode mode)
+        private async Task<Station> FindClosestStationInternalAsync(Position chosenPosition, string contractName)
+        {
+            var stations = await GetStationsAsync(contractName).ConfigureAwait(false);
+
+            if (stations == null || !stations.Any())
+            {
+                throw new Exception("Station list is empty. Cannot find the closest station.");
+            }
+
+            var chosenCoordinate = new GeoCoordinate(chosenPosition.Lat, chosenPosition.Lng);
+            return stations
+                .Select(station => new
+                {
+                    Station = station,
+                    Distance = chosenCoordinate.GetDistanceTo(new GeoCoordinate(station.Position.Lat, station.Position.Lng))
+                })
+                .OrderBy(x => x.Distance)
+                .FirstOrDefault()?.Station
+                ?? throw new Exception("No closest station found.");
+        }
+
+        private async Task<Itinerary> GetItineraryAsync(Position origin, Position destination, TravelMode mode, string key)
         {
             try
             {
                 string modePath = mode == TravelMode.Walking ? "foot-walking" : "cycling-regular";
-                var url = $"{OpenRouteUrl}/{modePath}?api_key={ApiKey}&start={origin.Lng},{origin.Lat}&end={destination.Lng},{destination.Lat}";
 
-                var response = await client.GetFromJsonAsync<Itinerary>(url);
-                if (response == null)
+                var url = $"{OpenRouteUrl}/{modePath}?api_key={OpenRouteApiKey}&start={origin.Lng},{origin.Lat}&end={destination.Lng},{destination.Lat}";
+
+                var response = await client.GetFromJsonAsync<OpenRouteResponse>(url).ConfigureAwait(false);
+
+                if (response == null || response.Features == null || !response.Features.Any())
                 {
-                    throw new Exception("Failed to retrieve itinerary");
+                    throw new Exception($"Failed to retrieve {mode.ToString().ToLower()} itinerary.");
                 }
 
-                return response;
+                var shortestRoute = response.Features
+                    .OrderBy(feature => feature.Properties.Summary.Distance)
+                    .First();
 
+                return new Itinerary
+                {
+                    Key = key,
+                    Distance = shortestRoute.Properties.Summary.Distance,
+                    Duration = TimeSpan.FromSeconds(shortestRoute.Properties.Summary.Duration),
+                    Coordinates = shortestRoute.Geometry.Coordinates
+                        .Select(coord => new Position { Lng = coord[0], Lat = coord[1] })
+                        .ToList(),
+                    Steps = shortestRoute.Properties.Segments
+                        .SelectMany(segment => segment.Steps)
+                        .Select(step => new Step
+                        {
+                            Distance = step.Distance,
+                            Duration = step.Duration,
+                            Instruction = step.Instruction,
+                            Name = step.Name
+                        }).ToList()
+                };
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error fetching {mode.ToString().ToLower()} itinerary: {ex.Message}");
+                throw new Exception($"Error while fetching {mode.ToString().ToLower()} itinerary. Details: {ex.Message}", ex);
             }
         }
-
-        public async Task<List<Itinerary>> GetFullItineraryInCaseOfBike(string origin, string destination)
-        {
-            try
-            {
-                var originCoordinates = GetCoordinates(origin);
-                var destinationCoordinates = GetCoordinates(destination);
-
-                var contractOrigin = await GetContractByCityAsync(originCoordinates.Address.Town);
-                var contractDestination = await GetContractByCityAsync(destinationCoordinates.Address.Town);
-
-                var stationsOrigin = await GetStations(contractOrigin.Name);
-                var stationsDestination = await GetStations(contractDestination.Name);
-
-                Position originPosition = new Position { Lat = originCoordinates.Lat, Lng = originCoordinates.Lon };
-                Position destinationPosition = new Position { Lat = destinationCoordinates.Lat, Lng = destinationCoordinates.Lon };
-                var firstStation = FindClosestStation(originPosition, stationsOrigin);
-                var lastStation = FindClosestStation(destinationPosition, stationsDestination);
-
-                var itinerary = new List<Itinerary>();
-
-                Itinerary walkingItineraryOrigin = await GetItinerary(originPosition, firstStation.Position, TravelMode.Walking);
-                Itinerary bikeItinerary = await GetItinerary(firstStation.Position, lastStation.Position, TravelMode.Biking);
-                Itinerary walkingItineraryDestination = await GetItinerary(lastStation.Position, destinationPosition, TravelMode.Walking);
-
-                itinerary.Add(walkingItineraryOrigin);
-                itinerary.Add(bikeItinerary);
-                itinerary.Add(walkingItineraryDestination);
-
-                return itinerary;
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to retrieve full itinerary: {ex.Message}");
-            }
-        }
-
     }
-    public class TravelTimeResponse
-    {
-        public double EstimatedMinutes { get; set; }
-    }
+
+
+    // --------- AUTRES CLASSES ---------
 
     public class GeocodeResponse
     {
-        [JsonPropertyName("lat")]
         public double Lat { get; set; }
-
-        [JsonPropertyName("lon")]
         public double Lon { get; set; }
-
-        [JsonPropertyName("display_name")]
-        public string DisplayName { get; set; }
-
-        [JsonPropertyName("address")]
+        public string Display_Name { get; set; }
         public Address Address { get; set; }
     }
 
     public class Address
     {
-        [JsonPropertyName("house_number")]
-        public string HouseNumber { get; set; }
-
-        [JsonPropertyName("road")]
-        public string Road { get; set; }
-
-        [JsonPropertyName("town")]
-        public string Town { get; set; }
+        public string Country { get; set; }
+        public string City { get; set; }
     }
 
     public class Itinerary
     {
+        public string Key { get; set; }
         public List<Step> Steps { get; set; }
         public double Distance { get; set; }
         public TimeSpan Duration { get; set; }
         public List<Position> Coordinates { get; set; }
-    }
-
-    public class Step
-    {
-        public double Distance { get; set; }
-        public double Duration { get; set; }
-        public string Instruction { get; set; }
-        public string Name { get; set; }
     }
 
     public enum TravelMode
@@ -233,40 +261,67 @@ namespace Proxy
         Biking
     }
 
-
     public class Position
     {
-
         public double Lat { get; set; }
-
         public double Lng { get; set; }
     }
 
-
     public class Station
     {
-
         public int Number { get; set; }
-
-
         public string Name { get; set; }
-
         public Position Position { get; set; }
-
-
         public string Status { get; set; }
-
-
-        public int AvailableStand { get; set; }
-
-
-        public int AvailableBike { get; set; }
+        public int Available_bike_stands { get; set; }
+        public int Available_bikes { get; set; }
     }
 
     public class Contract
     {
         public string Name { get; set; }
         public List<string> Cities { get; set; }
+    }
+
+    public class OpenRouteResponse
+    {
+        public List<Feature> Features { get; set; }
+    }
+
+    public class Feature
+    {
+        public Geometry Geometry { get; set; }
+        public Properties Properties { get; set; }
+    }
+
+    public class Geometry
+    {
+        public List<List<double>> Coordinates { get; set; }
+    }
+
+    public class Properties
+    {
+        public Summary Summary { get; set; }
+        public List<Segment> Segments { get; set; }
+    }
+
+    public class Summary
+    {
+        public double Distance { get; set; }
+        public double Duration { get; set; }
+    }
+
+    public class Segment
+    {
+        public List<Step> Steps { get; set; }
+    }
+
+    public class Step
+    {
+        public double Distance { get; set; }
+        public double Duration { get; set; }
+        public string Instruction { get; set; }
+        public string Name { get; set; }
     }
 
 }

@@ -1,4 +1,6 @@
-﻿using System.ServiceModel;
+﻿using RoutingServer.ProxyService;
+using System.Collections.Generic;
+using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 
@@ -10,10 +12,10 @@ namespace RoutingServer
     {
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "getItinerary?origin={origin}&destination={destination}")]
-        Task<string> GetItinerary(string origin, string destination);
+        Task<FullItineraryResult> GetItinerary(string origin, string destination);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "receiveItinerary")]
-        string ReceiveFromQueue();
+        FullItineraryResult ReceiveFromQueue();
     }
 }

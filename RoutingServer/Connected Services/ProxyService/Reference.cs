@@ -26,7 +26,7 @@ namespace RoutingServer.ProxyService {
         private RoutingServer.ProxyService.Address AddressField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string DisplayNameField;
+        private string Display_NameField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private double LatField;
@@ -58,14 +58,14 @@ namespace RoutingServer.ProxyService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string DisplayName {
+        public string Display_Name {
             get {
-                return this.DisplayNameField;
+                return this.Display_NameField;
             }
             set {
-                if ((object.ReferenceEquals(this.DisplayNameField, value) != true)) {
-                    this.DisplayNameField = value;
-                    this.RaisePropertyChanged("DisplayName");
+                if ((object.ReferenceEquals(this.Display_NameField, value) != true)) {
+                    this.Display_NameField = value;
+                    this.RaisePropertyChanged("Display_Name");
                 }
             }
         }
@@ -116,13 +116,10 @@ namespace RoutingServer.ProxyService {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string HouseNumberField;
+        private string CityField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string RoadField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string TownField;
+        private string CountryField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -135,40 +132,27 @@ namespace RoutingServer.ProxyService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string HouseNumber {
+        public string City {
             get {
-                return this.HouseNumberField;
+                return this.CityField;
             }
             set {
-                if ((object.ReferenceEquals(this.HouseNumberField, value) != true)) {
-                    this.HouseNumberField = value;
-                    this.RaisePropertyChanged("HouseNumber");
+                if ((object.ReferenceEquals(this.CityField, value) != true)) {
+                    this.CityField = value;
+                    this.RaisePropertyChanged("City");
                 }
             }
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Road {
+        public string Country {
             get {
-                return this.RoadField;
+                return this.CountryField;
             }
             set {
-                if ((object.ReferenceEquals(this.RoadField, value) != true)) {
-                    this.RoadField = value;
-                    this.RaisePropertyChanged("Road");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Town {
-            get {
-                return this.TownField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.TownField, value) != true)) {
-                    this.TownField = value;
-                    this.RaisePropertyChanged("Town");
+                if ((object.ReferenceEquals(this.CountryField, value) != true)) {
+                    this.CountryField = value;
+                    this.RaisePropertyChanged("Country");
                 }
             }
         }
@@ -254,10 +238,10 @@ namespace RoutingServer.ProxyService {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int AvailableBikeField;
+        private int Available_bike_standsField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int AvailableStandField;
+        private int Available_bikesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string NameField;
@@ -282,27 +266,27 @@ namespace RoutingServer.ProxyService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int AvailableBike {
+        public int Available_bike_stands {
             get {
-                return this.AvailableBikeField;
+                return this.Available_bike_standsField;
             }
             set {
-                if ((this.AvailableBikeField.Equals(value) != true)) {
-                    this.AvailableBikeField = value;
-                    this.RaisePropertyChanged("AvailableBike");
+                if ((this.Available_bike_standsField.Equals(value) != true)) {
+                    this.Available_bike_standsField = value;
+                    this.RaisePropertyChanged("Available_bike_stands");
                 }
             }
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int AvailableStand {
+        public int Available_bikes {
             get {
-                return this.AvailableStandField;
+                return this.Available_bikesField;
             }
             set {
-                if ((this.AvailableStandField.Equals(value) != true)) {
-                    this.AvailableStandField = value;
-                    this.RaisePropertyChanged("AvailableStand");
+                if ((this.Available_bikesField.Equals(value) != true)) {
+                    this.Available_bikesField = value;
+                    this.RaisePropertyChanged("Available_bikes");
                 }
             }
         }
@@ -460,6 +444,9 @@ namespace RoutingServer.ProxyService {
         private System.TimeSpan DurationField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string KeyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private RoutingServer.ProxyService.Step[] StepsField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -507,6 +494,19 @@ namespace RoutingServer.ProxyService {
                 if ((this.DurationField.Equals(value) != true)) {
                     this.DurationField = value;
                     this.RaisePropertyChanged("Duration");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Key {
+            get {
+                return this.KeyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.KeyField, value) != true)) {
+                    this.KeyField = value;
+                    this.RaisePropertyChanged("Key");
                 }
             }
         }
@@ -637,17 +637,11 @@ namespace RoutingServer.ProxyService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/GetCoordinates", ReplyAction="http://tempuri.org/IProxy/GetCoordinatesResponse")]
         System.Threading.Tasks.Task<RoutingServer.ProxyService.GeocodeResponse> GetCoordinatesAsync(string city);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/CalculateDistance", ReplyAction="http://tempuri.org/IProxy/CalculateDistanceResponse")]
-        double CalculateDistance(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/CalculateDistance", ReplyAction="http://tempuri.org/IProxy/CalculateDistanceResponse")]
-        System.Threading.Tasks.Task<double> CalculateDistanceAsync(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/FindClosestStation", ReplyAction="http://tempuri.org/IProxy/FindClosestStationResponse")]
+        RoutingServer.ProxyService.Station FindClosestStation(RoutingServer.ProxyService.Position chosenStation, string contractName);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/FindClosestStation", ReplyAction="http://tempuri.org/IProxy/FindClosestStationResponse")]
-        RoutingServer.ProxyService.Station FindClosestStation(RoutingServer.ProxyService.Position chosenStation, RoutingServer.ProxyService.Station[] stations);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/FindClosestStation", ReplyAction="http://tempuri.org/IProxy/FindClosestStationResponse")]
-        System.Threading.Tasks.Task<RoutingServer.ProxyService.Station> FindClosestStationAsync(RoutingServer.ProxyService.Position chosenStation, RoutingServer.ProxyService.Station[] stations);
+        System.Threading.Tasks.Task<RoutingServer.ProxyService.Station> FindClosestStationAsync(RoutingServer.ProxyService.Position chosenStation, string contractName);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/GetContractByCity", ReplyAction="http://tempuri.org/IProxy/GetContractByCityResponse")]
         RoutingServer.ProxyService.Contract GetContractByCity(string city);
@@ -668,16 +662,10 @@ namespace RoutingServer.ProxyService {
         System.Threading.Tasks.Task<RoutingServer.ProxyService.Station[]> GetStationsAsync(string contractName);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/GetItinerary", ReplyAction="http://tempuri.org/IProxy/GetItineraryResponse")]
-        RoutingServer.ProxyService.Itinerary GetItinerary(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination, RoutingServer.ProxyService.TravelMode mode);
+        RoutingServer.ProxyService.Itinerary GetItinerary(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination, RoutingServer.ProxyService.TravelMode mode, string key);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/GetItinerary", ReplyAction="http://tempuri.org/IProxy/GetItineraryResponse")]
-        System.Threading.Tasks.Task<RoutingServer.ProxyService.Itinerary> GetItineraryAsync(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination, RoutingServer.ProxyService.TravelMode mode);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/GetFullItineraryInCaseOfBike", ReplyAction="http://tempuri.org/IProxy/GetFullItineraryInCaseOfBikeResponse")]
-        RoutingServer.ProxyService.Itinerary[] GetFullItineraryInCaseOfBike(string origin, string destination);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/GetFullItineraryInCaseOfBike", ReplyAction="http://tempuri.org/IProxy/GetFullItineraryInCaseOfBikeResponse")]
-        System.Threading.Tasks.Task<RoutingServer.ProxyService.Itinerary[]> GetFullItineraryInCaseOfBikeAsync(string origin, string destination);
+        System.Threading.Tasks.Task<RoutingServer.ProxyService.Itinerary> GetItineraryAsync(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination, RoutingServer.ProxyService.TravelMode mode, string key);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -715,20 +703,12 @@ namespace RoutingServer.ProxyService {
             return base.Channel.GetCoordinatesAsync(city);
         }
         
-        public double CalculateDistance(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination) {
-            return base.Channel.CalculateDistance(origin, destination);
+        public RoutingServer.ProxyService.Station FindClosestStation(RoutingServer.ProxyService.Position chosenStation, string contractName) {
+            return base.Channel.FindClosestStation(chosenStation, contractName);
         }
         
-        public System.Threading.Tasks.Task<double> CalculateDistanceAsync(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination) {
-            return base.Channel.CalculateDistanceAsync(origin, destination);
-        }
-        
-        public RoutingServer.ProxyService.Station FindClosestStation(RoutingServer.ProxyService.Position chosenStation, RoutingServer.ProxyService.Station[] stations) {
-            return base.Channel.FindClosestStation(chosenStation, stations);
-        }
-        
-        public System.Threading.Tasks.Task<RoutingServer.ProxyService.Station> FindClosestStationAsync(RoutingServer.ProxyService.Position chosenStation, RoutingServer.ProxyService.Station[] stations) {
-            return base.Channel.FindClosestStationAsync(chosenStation, stations);
+        public System.Threading.Tasks.Task<RoutingServer.ProxyService.Station> FindClosestStationAsync(RoutingServer.ProxyService.Position chosenStation, string contractName) {
+            return base.Channel.FindClosestStationAsync(chosenStation, contractName);
         }
         
         public RoutingServer.ProxyService.Contract GetContractByCity(string city) {
@@ -755,20 +735,12 @@ namespace RoutingServer.ProxyService {
             return base.Channel.GetStationsAsync(contractName);
         }
         
-        public RoutingServer.ProxyService.Itinerary GetItinerary(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination, RoutingServer.ProxyService.TravelMode mode) {
-            return base.Channel.GetItinerary(origin, destination, mode);
+        public RoutingServer.ProxyService.Itinerary GetItinerary(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination, RoutingServer.ProxyService.TravelMode mode, string key) {
+            return base.Channel.GetItinerary(origin, destination, mode, key);
         }
         
-        public System.Threading.Tasks.Task<RoutingServer.ProxyService.Itinerary> GetItineraryAsync(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination, RoutingServer.ProxyService.TravelMode mode) {
-            return base.Channel.GetItineraryAsync(origin, destination, mode);
-        }
-        
-        public RoutingServer.ProxyService.Itinerary[] GetFullItineraryInCaseOfBike(string origin, string destination) {
-            return base.Channel.GetFullItineraryInCaseOfBike(origin, destination);
-        }
-        
-        public System.Threading.Tasks.Task<RoutingServer.ProxyService.Itinerary[]> GetFullItineraryInCaseOfBikeAsync(string origin, string destination) {
-            return base.Channel.GetFullItineraryInCaseOfBikeAsync(origin, destination);
+        public System.Threading.Tasks.Task<RoutingServer.ProxyService.Itinerary> GetItineraryAsync(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination, RoutingServer.ProxyService.TravelMode mode, string key) {
+            return base.Channel.GetItineraryAsync(origin, destination, mode, key);
         }
     }
 }
