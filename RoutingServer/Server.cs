@@ -69,7 +69,9 @@ namespace RoutingServer
                 {
                     Itineraries = itineraries,
                     FirstStation = firstStation,
-                    LastStation = lastStation
+                    LastStation = lastStation,
+                    Origin = new Position { Lat = originCoordinates.Lat, Lng = originCoordinates.Lon },
+                    Destination = new Position { Lat = destinationCoordinates.Lat, Lng = destinationCoordinates.Lon }
                 };
             }
             catch (Exception ex)
@@ -152,5 +154,7 @@ namespace RoutingServer
         public List<Itinerary> Itineraries { get; set; }
         public Station FirstStation { get; set; }
         public Station LastStation { get; set; }
+        public Position Origin { get; set; }
+        public Position Destination { get; set; }
     }
 }

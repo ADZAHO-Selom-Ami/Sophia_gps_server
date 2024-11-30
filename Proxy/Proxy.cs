@@ -124,7 +124,14 @@ namespace Proxy
                 throw new Exception("No contracts available.");
             }
 
-            var contract = contracts.FirstOrDefault(c => c.Cities != null && c.Cities.Contains(city));
+            var contract = contracts.FirstOrDefault(c =>
+                c.Cities != null &&
+                c.Cities.Any(cityName =>
+                    cityName.Equals(city, StringComparison.OrdinalIgnoreCase) ||
+                    cityName.IndexOf(city, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    city.IndexOf(cityName, StringComparison.OrdinalIgnoreCase) >= 0
+                )
+            );
 
             if (contract == null)
             {
@@ -133,6 +140,7 @@ namespace Proxy
 
             return contract;
         }
+
 
         private async Task<List<Station>> GetStationsAsync(string contractName)
         {
