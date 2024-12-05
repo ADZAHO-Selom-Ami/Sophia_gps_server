@@ -44,6 +44,12 @@
   <wsdl:message name="IProxy_GetItinerary_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetItineraryResponse" />
   </wsdl:message>
+  <wsdl:message name="IProxy_GetClosestCityWithContract_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetClosestCityWithContract" />
+  </wsdl:message>
+  <wsdl:message name="IProxy_GetClosestCityWithContract_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetClosestCityWithContractResponse" />
+  </wsdl:message>
   <wsdl:portType name="IProxy">
     <wsdl:operation name="GetCoordinates">
       <wsdl:input wsaw:Action="http://tempuri.org/IProxy/GetCoordinates" message="tns:IProxy_GetCoordinates_InputMessage" />
@@ -68,6 +74,10 @@
     <wsdl:operation name="GetItinerary">
       <wsdl:input wsaw:Action="http://tempuri.org/IProxy/GetItinerary" message="tns:IProxy_GetItinerary_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IProxy/GetItineraryResponse" message="tns:IProxy_GetItinerary_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetClosestCityWithContract">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProxy/GetClosestCityWithContract" message="tns:IProxy_GetClosestCityWithContract_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProxy/GetClosestCityWithContractResponse" message="tns:IProxy_GetClosestCityWithContract_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IProxy" type="tns:IProxy">
@@ -119,6 +129,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetItinerary">
       <soap:operation soapAction="http://tempuri.org/IProxy/GetItinerary" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetClosestCityWithContract">
+      <soap:operation soapAction="http://tempuri.org/IProxy/GetClosestCityWithContract" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

@@ -26,6 +26,13 @@ namespace Proxy
 
         [OperationContract]
         Itinerary GetItinerary(Position origin, Position destination, TravelMode mode, string key);
+
+        [OperationContract]
+        string GetClosestCityWithContract(Position position);
+
+
+
+
     }
 
 

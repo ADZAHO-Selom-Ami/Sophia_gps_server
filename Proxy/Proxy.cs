@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.Remoting.Messaging;
+using System.Text;
+using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Proxy
@@ -14,7 +19,7 @@ namespace Proxy
         private const string ApiUrl = "https://api.jcdecaux.com/vls/v1";
         private const string OpenRouteUrl = "https://api.openrouteservice.org/v2/directions";
         private const string OpenRouteApiKey = "5b3ce3597851110001cf624881823d08157349c7abcde66f42aad2e3";
-        private const string ApiKey = "8d9168bd963b85bab2899622e5d944bf9fc7e53a";
+        private const string ApiKey = "5df25c847314dd583d69b046850275dd13334d96";
         private static readonly HttpClient client = new HttpClient();
 
         // Cache instances
@@ -53,6 +58,13 @@ namespace Proxy
             return GetItineraryAsync(origin, destination, mode, key).GetAwaiter().GetResult();
         }
 
+        public string GetClosestCityWithContract(Position position)
+        {
+            return GetClosestStationWithContractAsync(position).GetAwaiter().GetResult();
+        }
+
+       
+
         // --------- MÉTHODES INTERNES ASYNCHRONES ---------
 
         private async Task<GeocodeResponse> GetCoordinatesAsync(string city)
@@ -85,6 +97,81 @@ namespace Proxy
             }
         }
 
+        private async Task<string> GetClosestStationWithContractAsync(Position position)
+        {
+
+            Console.WriteLine("Récupération du contrat le plus proche.");
+            if (position == null)
+            {
+                Console.WriteLine("Les coordonnées fournies sont nulles.");
+                return null;
+            }
+
+            // Récupération des contrats disponibles
+            var contracts = await GetContractsAsync().ConfigureAwait(false);
+            if (contracts == null || !contracts.Any())
+            {
+                Console.WriteLine("Aucun contrat disponible.");
+                return null;
+            }
+
+            string nearestContract = null;
+            double shortestDistance = double.MaxValue;
+
+            foreach (var contract in contracts)
+            {
+                if (contract.Cities == null || !contract.Cities.Any())
+                {
+                    continue; // Si le contrat n'a pas de villes associées, on le saute
+                }
+
+                foreach (var city in contract.Cities)
+                {
+                    Console.WriteLine(city);
+                    try
+                    {
+                        // Récupération des coordonnées de la ville
+                        var cityGeocode = await GetCoordinatesAsync(city).ConfigureAwait(false);
+                        if (cityGeocode == null || cityGeocode.Lat == null || cityGeocode.Lon == null)
+                        {
+                            Console.WriteLine($"Impossible de récupérer les coordonnées pour la ville {city}");
+                            continue;
+                        }
+
+                        // Calcul de la distance entre la position et la ville
+                        var cityCoordinate = new GeoCoordinate((double)cityGeocode.Lat, (double)cityGeocode.Lon);
+                        var distance = new GeoCoordinate(position.Lat, position.Lng).GetDistanceTo(cityCoordinate);
+
+                        // Mise à jour du contrat le plus proche
+                        if (distance < shortestDistance)
+                        {
+                            shortestDistance = distance;
+                            nearestContract = contract.Name;
+                            Console.WriteLine($"Le nouveau contrat {contract.Name}");// On stocke le nom du contrat
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Erreur lors de la récupération des coordonnées pour la ville {city}. Détails : {ex.Message}");
+                        continue;
+                    }
+                }
+            }
+
+            if (nearestContract == null)
+            {
+                Console.WriteLine("Aucun contrat proche n'a été trouvé.");
+            }
+            else
+            {
+                Console.WriteLine($"Le contrat le plus proche est : {nearestContract}, à une distance de {shortestDistance} mètres.");
+            }
+            return nearestContract;
+
+        }
+
+
+
 
 
         private async Task<List<Contract>> GetContractsAsync()
@@ -102,7 +189,8 @@ namespace Proxy
                 var response = await client.GetFromJsonAsync<List<Contract>>($"{ApiUrl}/contracts?apiKey={ApiKey}").ConfigureAwait(false);
                 if (response == null)
                 {
-                    throw new Exception("Failed to retrieve contracts.");
+                    Console.WriteLine("Aucun contrat n'a été trouvé");
+                    return null; 
                 }
 
                 // Mise en cache
@@ -111,39 +199,76 @@ namespace Proxy
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while fetching contracts. Details: " + ex.Message, ex);
+                return null; 
             }
         }
 
         private async Task<Contract> GetContractByCityAsync(string city)
         {
+            Console.WriteLine($"Looking for the contract of {city}");
+
+            if (city == null)
+            {
+                Console.WriteLine("La ville est null");
+                return null;
+            }
+
+            // Normaliser la ville entrée
+            var normalizedCity = NormalizeString(city);
+
             var contracts = await GetContractsAsync().ConfigureAwait(false);
+            Console.WriteLine("Nous essayons de recuperer les contrats");
 
             if (contracts == null || !contracts.Any())
             {
-                throw new Exception("No contracts available.");
+                Console.WriteLine("Le contrat est null");
+                return null;
             }
 
+            Console.WriteLine("Les contrats ne sont pas null");
+
+            // Rechercher un contrat correspondant en utilisant la normalisation
             var contract = contracts.FirstOrDefault(c =>
                 c.Cities != null &&
                 c.Cities.Any(cityName =>
-                    cityName.Equals(city, StringComparison.OrdinalIgnoreCase) ||
-                    cityName.IndexOf(city, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    city.IndexOf(cityName, StringComparison.OrdinalIgnoreCase) >= 0
+                    NormalizeString(cityName).Equals(normalizedCity) || // Comparaison exacte
+                    NormalizeString(cityName).IndexOf(normalizedCity, StringComparison.OrdinalIgnoreCase) >= 0 || // Inclusion partielle
+                    normalizedCity.IndexOf(NormalizeString(cityName), StringComparison.OrdinalIgnoreCase) >= 0 // Inclusion inverse
                 )
             );
 
             if (contract == null)
             {
-                throw new Exception($"No contract found for city: {city}");
+                Console.WriteLine("Le contrat est null lorsque je récupère le contrat par ville");
+                return null;
             }
 
             return contract;
         }
 
+        private string NormalizeString(string input)
+        {
+            if (input == null) return null;
+
+            var normalizedString = input.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark) // Retirer les caractères d'accents
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().ToLowerInvariant(); // Convertir en minuscules
+        }
+
 
         private async Task<List<Station>> GetStationsAsync(string contractName)
         {
+            Console.WriteLine("Nous essayons de recuperer les stations");
             try
             {
                 // Vérification du cache
@@ -158,7 +283,9 @@ namespace Proxy
 
                 if (response == null)
                 {
-                    throw new Exception($"Failed to retrieve stations for contract: {contractName}");
+                    Console.WriteLine("Aucune réponse de l'API");
+
+                   return null;
                 }
 
                 // Mise en cache
@@ -167,17 +294,21 @@ namespace Proxy
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error while fetching stations for contract: {contractName}. Details: {ex.Message}", ex);
+                Console.WriteLine("Le contrat est null lorsque je recupere les stations");
+                return null; 
             }
         }
 
         private async Task<Station> FindClosestStationInternalAsync(Position chosenPosition, string contractName)
         {
+            Console.WriteLine($"Le nom du contrat en question {contractName}");
+            Console.WriteLine("Récupération de la station la plus proche");
             var stations = await GetStationsAsync(contractName).ConfigureAwait(false);
 
             if (stations == null || !stations.Any())
             {
-                throw new Exception("Station list is empty. Cannot find the closest station.");
+                Console.WriteLine("Les stations sont nul mon bg");
+                return null; 
             }
 
             var chosenCoordinate = new GeoCoordinate(chosenPosition.Lat, chosenPosition.Lng);
@@ -190,7 +321,7 @@ namespace Proxy
                 })
                 .OrderBy(x => x.Distance)
                 .FirstOrDefault()?.Station
-                ?? throw new Exception("No closest station found.");
+                ?? null;
         }
 
 
@@ -237,6 +368,8 @@ namespace Proxy
                 throw new Exception($"Error while fetching {mode.ToString().ToLower()} itinerary. Details: {ex.Message}", ex);
             }
         }
+
+      
     }
 
 
