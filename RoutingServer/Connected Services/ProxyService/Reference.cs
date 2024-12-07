@@ -666,6 +666,12 @@ namespace RoutingServer.ProxyService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/GetItinerary", ReplyAction="http://tempuri.org/IProxy/GetItineraryResponse")]
         System.Threading.Tasks.Task<RoutingServer.ProxyService.Itinerary> GetItineraryAsync(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination, RoutingServer.ProxyService.TravelMode mode, string key);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/GetClosestCityWithContract", ReplyAction="http://tempuri.org/IProxy/GetClosestCityWithContractResponse")]
+        string GetClosestCityWithContract(RoutingServer.ProxyService.Position position);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProxy/GetClosestCityWithContract", ReplyAction="http://tempuri.org/IProxy/GetClosestCityWithContractResponse")]
+        System.Threading.Tasks.Task<string> GetClosestCityWithContractAsync(RoutingServer.ProxyService.Position position);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -741,6 +747,14 @@ namespace RoutingServer.ProxyService {
         
         public System.Threading.Tasks.Task<RoutingServer.ProxyService.Itinerary> GetItineraryAsync(RoutingServer.ProxyService.Position origin, RoutingServer.ProxyService.Position destination, RoutingServer.ProxyService.TravelMode mode, string key) {
             return base.Channel.GetItineraryAsync(origin, destination, mode, key);
+        }
+        
+        public string GetClosestCityWithContract(RoutingServer.ProxyService.Position position) {
+            return base.Channel.GetClosestCityWithContract(position);
+        }
+        
+        public System.Threading.Tasks.Task<string> GetClosestCityWithContractAsync(RoutingServer.ProxyService.Position position) {
+            return base.Channel.GetClosestCityWithContractAsync(position);
         }
     }
 }
